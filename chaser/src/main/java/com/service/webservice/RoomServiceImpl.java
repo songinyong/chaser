@@ -85,7 +85,8 @@ public class RoomServiceImpl implements RoomService {
 			roomRepo.save(room);			
 			
 			if(room.getRoomOwner().equals(sessionId)) {
-				ownerSet(room, room.getUserList().get(0));
+				if(!room.getUserList().isEmpty())
+					ownerSet(room, room.getUserList().get(0));
 				return 0;	
 			}
 
@@ -109,7 +110,8 @@ public class RoomServiceImpl implements RoomService {
 
 		room.setRoomTitle(title);
 		return true;
-}
+    }
+	
 		
 
 	//현재 생성된 방 목록들의 상태 보여줌

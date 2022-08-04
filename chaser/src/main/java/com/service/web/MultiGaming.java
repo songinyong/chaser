@@ -30,16 +30,18 @@ public class MultiGaming implements Gaming {
 	boolean startCheck = false ;
 	
 	//게임 시작 시간
-	LocalDateTime startGameTime = LocalDateTime.now();	
+	private LocalDateTime startGameTime = LocalDateTime.now();	
 
+	//각 유저의 게임 판
+	private HashMap<String, Board> gameBoards = new HashMap<String, Board>();
 	
 	//각 유저의 게임 판
-	HashMap<String, Board> gameBoards = new HashMap<String, Board>();
+	private HashMap<String, Integer> score = new HashMap<String, Integer>();    
 	
-	//각 유저의 게임 판
-	HashMap<String, Integer> score = new HashMap<String, Integer>();    
+	private List<Dice> diceList = new ArrayList<Dice>();
 	
-	List<Dice> diceList = new ArrayList<Dice>();
+	//현재 라운드에서 진행한 턴 수
+    private int currentTurn = 0 ;
 	
 	//현재 플레이어가 주사위 몇번 굴렸는지 확인
 	int rolDiceCheck = 0;

@@ -1,5 +1,6 @@
 package com.service.web.handler;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,7 @@ public class MultiHandler extends TextWebSocketHandler  {
     	String payload = message.getPayload();
        
         JSONObject obj = jsonToObjectParser(payload);
+        System.out.println(obj);
         HashMap result = new HashMap();
 
         //정상적으로 연결되어 있을때만 메시지 처리
@@ -77,6 +79,8 @@ public class MultiHandler extends TextWebSocketHandler  {
         	            	userMap.get(session.getId()).setUserNm(roomId);
         	            
         	            
+        	            userMap.get(session.getId()).setRoomId(roomId);
+        	            
         	            nextRoomId++;
         	            roomMap.put(roomId, roomService.roomCreate(roomId));
         	            //방에 들어감
@@ -88,11 +92,12 @@ public class MultiHandler extends TextWebSocketHandler  {
                 		result.put("roomId", roomId);
                 		result.put("userId", session.getId());
                 		result.put("userNm", userMap.get(session.getId()).getUserNm());
+                		result.put("status", 3);
                 		sendMessage(session, makeJson(result));
         		}
         		//방입장
         		else if(obj.get("roomStatus").equals("enter")) {
-        			String roomId = (String) obj.get("roomId");
+        			String roomId =  (String) obj.get("roomId");
         			
         			if(roomMap.get(roomId)==null) {
         				//없는 방이라는 메시지 전달
@@ -118,15 +123,21 @@ public class MultiHandler extends TextWebSocketHandler  {
         	            	
         	            	//이름 설정
             	            if(obj.get("userNm") != null)
-            	            	userMap.get(session.getId()).setUserNm(roomId);
+            	            	userMap.get(session.getId()).setUserNm(session.getId());
         	            	
                     		result.put("result", true);
                     		result.put("userId", session.getId());
                     		result.put("userNm", userMap.get(session.getId()).getUserNm());
+                    		result.put("status", 0);
+                    		
                     		
             				for (String u : roomMap.get(roomId).getUserList()) 
             					sendMessage(userMap.get(u).getSession(), makeJson(result));
 
+            				HashMap soloMessage = new HashMap();
+            				soloMessage.put("status", 3);
+            				sendMessage(session, makeJson(soloMessage));
+            				
         	            }
         	            else {
                     		result.put("result", false);
@@ -139,7 +150,9 @@ public class MultiHandler extends TextWebSocketHandler  {
         		}
         		//방퇴장
         		else if(obj.get("roomStatus").equals("out")) {
-        			String roomId = (String) obj.get("roomId");
+        			String roomId = userMap.get(session.getId()).getRoomId();
+        			
+        			if(!roomId.isEmpty()) {
         			if(roomMap.get(roomId).getUserList().contains(session.getId())) {
         				
         				int resultCheck = roomService.userOut(roomMap.get(roomId), session.getId());
@@ -150,10 +163,16 @@ public class MultiHandler extends TextWebSocketHandler  {
 	                		result.put("result", true);
 	                		result.put("userId", session.getId());  
 	                		result.put("mesg", "다른 유저가 나갔습니다");
-	                		
+	                		result.put("status", 0);
 	        				for (String u : roomMap.get(roomId).getUserList()) 
 	        					sendMessage(userMap.get(u).getSession(), makeJson(result));   
         				
+	        				
+	        				
+            				HashMap soloMessage = new HashMap();
+            				soloMessage.put("status", 2);
+            				sendMessage(session, makeJson(soloMessage));
+	        				
         				if(resultCheck == 0) {
         					//roomService.ownerSet(roomMap.get(roomId), roomMap.get(roomId).getUserList().get(0));
                     		result.put("result", true);
@@ -173,6 +192,7 @@ public class MultiHandler extends TextWebSocketHandler  {
         				
         				
         				
+        			}
         			}
         			
         		}
@@ -201,61 +221,78 @@ public class MultiHandler extends TextWebSocketHandler  {
         		//게임 시작이나 ready start 될시 result에 보내줘야함
         		else if(obj.get("roomStatus").equals("start")) {
         			
-        			String roomId = (String) obj.get("roomId");
-        			boolean gameStart = roomService.userclickStart(roomMap.get(roomId), session.getId());
-
+        			String roomId = userMap.get(session.getId()).getRoomId();
+        			
+        			if(!roomId.isEmpty()) {
+	        			boolean gameStart = roomService.userclickStart(roomMap.get(roomId), session.getId());
+	
+	            		
+	            		// -> 방장일때 start
+	            		if(roomMap.get(roomId).getRoomOwner().equals(session.getId()) && gameStart) {
+	                		
+	        				roomMap.get(roomId).setGaming(gameService.gameStart(roomId, obj));
+	        				
+	                		
+	                    		result.put("gaming", true);
+	                    		result.put("time", 30);
+	                    		result.put("status", 4);
+	                    		
+	                    		//게임 score 정보 초기화
+	                    		for (String u : roomMap.get(roomId).getUserList()) {
+	                    			roomMap.get(roomId).getGaming().getScore().put(u, 0); 
+	                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
+	                    		}
+	                    		
+	                    		roomMap.get(roomId).setProgressCheck(true);
+	                    		roomMap.get(roomId).getGaming().setStartCheck(true);
+	                    		
+	                    		//턴 시작
+	                    		roomMap.get(roomId).getGaming().setStarTurnTime(LocalDateTime.now());
+	                    		
+	                    		roomRepo.save(roomMap.get(roomId));    
+	                    		
+	            		} 
+	            		else if(roomMap.get(roomId).getRoomOwner().equals(session.getId()) && !gameStart) {
+	
+	            			result.put("stat", false);
+	                		result.put("msg", "모든 유저가 Ready가 아님");
+	                		
+	                		for (String u : roomMap.get(roomId).getUserList()) 
+	                			sendMessage(userMap.get(u).getSession(), makeJson(result));                		
+	            			
+	            		}
+	            		//일반 유저일떄 ready나 ready 해제는 룸서비스 userclickStart가 처리
+	            		else {
+	            			
+	            			if(roomMap.get(roomId).getUserReady().contains(session.getId())) {
+	            				result.put("ready", true);
+	            				result.put("userId", session.getId());
+	            				result.put("userNm", userMap.get(session.getId()).getUserNm());
+	                    		for (String u : roomMap.get(roomId).getUserList()) 
+	                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
+	            			}
+	            			else {
+	            				result.put("ready", false);
+	            				result.put("userId", session.getId());
+	            				result.put("userNm", userMap.get(session.getId()).getUserNm());
+	                    		for (String u : roomMap.get(roomId).getUserList()) 
+	                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
+	            			}
+	            				
+	            			
+	            		}
             		
-            		// -> 방장일때 start
-            		if(roomMap.get(roomId).getRoomOwner().equals(session.getId()) && gameStart) {
-                		
-        				roomMap.get(roomId).setGaming(gameService.gameStart(roomId, obj));
-        				
-                		
-                    		result.put("gaming", true);
-                    		result.put("time", 30);
-                    		
-                    		//게임 score 정보 초기화
-                    		for (String u : roomMap.get(roomId).getUserList()) {
-                    			roomMap.get(roomId).getGaming().getScore().put(u, 0); 
-                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
-                    		}
-                    		
-                    		roomMap.get(roomId).setProgressCheck(true);
-                    		roomMap.get(roomId).getGaming().setStartCheck(true);
-                    		roomRepo.save(roomMap.get(roomId));    
-                    		
-            		} 
-            		else if(roomMap.get(roomId).getRoomOwner().equals(session.getId()) && !gameStart) {
-
-            			result.put("stat", false);
-                		result.put("msg", "모든 유저가 Ready가 아님");
-                		
-                		for (String u : roomMap.get(roomId).getUserList()) 
-                			sendMessage(userMap.get(u).getSession(), makeJson(result));                		
-            			
-            		}
-            		//일반 유저일떄 ready나 ready 해제는 룸서비스 userclickStart가 처리
-            		else {
-            			
-            			if(roomMap.get(roomId).getUserReady().contains(session.getId())) {
-            				result.put("ready", true);
-            				result.put("userId", session.getId());
-            				result.put("userNm", userMap.get(session.getId()).getUserNm());
-                    		for (String u : roomMap.get(roomId).getUserList()) 
-                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
-            			}
-            			else {
-            				result.put("ready", false);
-            				result.put("userId", session.getId());
-            				result.put("userNm", userMap.get(session.getId()).getUserNm());
-                    		for (String u : roomMap.get(roomId).getUserList()) 
-                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
-            			}
-            				
-            			
-            		}
-            		
+        			}
             		       			
+        		} //유저 이름 변경
+        		else if(obj.get("roomStatus").equals("nameChg")) {
+        			String userNm = (String) obj.get("userNm");
+        			
+        			userMap.get(session.getId()).setUserNm(userNm);
+    				result.put("ready", true);
+    				result.put("userNm", userNm);        			
+        			sendMessage(session, makeJson(result));
+        				
         		} //방 이름 변경
         		else if(obj.get("roomStatus").equals("setting")) {
         			String roomId = (String) obj.get("roomId");
@@ -269,8 +306,7 @@ public class MultiHandler extends TextWebSocketHandler  {
         				
         			}
         				
-        		}
-        		
+        		}        		
         		
             	//게임진행중일때
         		//한 유저가 다이스 전부 굴림
@@ -286,16 +322,19 @@ public class MultiHandler extends TextWebSocketHandler  {
         		 * 라운드가 남아있을시 true 없으면 false -> 게임 end
         		 * */
             	else if(obj.get("roomStatus").equals("gaming")) {
-            		String roomId = (String) obj.get("roomId");
+            		String roomId = userMap.get(session.getId()).getRoomId();
 
             		Gaming redisGame = roomMap.get(roomId).getGaming();
             		
-            		if(redisGame.getRound() <13) {
+            		if(redisGame.getRound() <13 && gameService.checkUserTurn(session.getId(), roomMap.get(roomId).getUserList(), redisGame ) ) {
             		
+            			
 	            		if(obj.get("gameAction").equals("dice")) {
 	            			//주사위 굴릴 수 있는지 체크후 처리함
+	            			System.out.println("접근");
 	            			boolean ctrlResult = gameService.diceCtrl(redisGame, (String) obj.get("index"));
 	            			
+	            			System.out.println(ctrlResult);
 	            			if(ctrlResult) {
 	            				
 	                			result.put("gaming", true);
@@ -310,12 +349,12 @@ public class MultiHandler extends TextWebSocketHandler  {
 	            			else {
 	                			result.put("gaming", true);
 	                			result.put("result", false);
-	                			result.put("diceList", "");
+	                			result.put("msg", "주사위를 굴릴 수 없습니다");
 	            				
-	                			//방 전체 메시지에 보냄
-	                    		for (String u : roomMap.get(roomId).getUserList()) 
-	                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
+	                			sendMessage(session,  makeJson(result));
 	            				
+	                			//!시간이 지나서 다음 유저에게 넘김, 임의적으로 점수판에 넣는 기능 추가로 구현 필요
+	                			gameService.nextUser(roomMap.get(roomId).getUserList(), redisGame);
 	            			}
 	            			
 	            		} // dice 굴리기 액션일때
@@ -325,12 +364,20 @@ public class MultiHandler extends TextWebSocketHandler  {
 	            			
 	            			if(ctrlResult) {
 	            				
+	            				//다음 유저에게 넘김
+	                			gameService.nextUser(roomMap.get(roomId).getUserList(), redisGame);
+	            				
 	                			result.put("gaming", true);
 	                			result.put("result", true);
-	            				
+	                			result.put("nextUser", roomMap.get(roomId).getUserList().get(redisGame.getCurrentTurn()));
+	                			
+	                			
 	                			//방 전체 메시지에 보냄
 	                    		for (String u : roomMap.get(roomId).getUserList()) 
 	                    			sendMessage(userMap.get(u).getSession(), makeJson(result));
+	                    		
+	                    		//턴 시작
+	                    		roomMap.get(roomId).getGaming().setStarTurnTime(LocalDateTime.now());
 	            				
 	            			}
 	            			else {

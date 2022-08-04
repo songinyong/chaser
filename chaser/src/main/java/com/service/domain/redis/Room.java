@@ -57,6 +57,9 @@ public class Room {
 	//방 객체가 게임중인지 확인
 	private boolean progressCheck = false;
 	
+	//현재 게임 턴을 진행중인 유저
+	private String currentUser ;
+	
 
 	//강퇴 리스트
 	@Setter(AccessLevel.NONE)

@@ -9,7 +9,7 @@ import com.service.domain.Dice;
 
 public interface Gaming {
 
-	public void setStarTurnTime(LocalDateTime turnTime);
+	public String getRoomId();
 	
 	public int getRound();
 	
@@ -17,17 +17,24 @@ public interface Gaming {
 	
 	public LocalDateTime getStarTurnTime() ;
 	
+	public void setStarTurnTime(LocalDateTime turnTime);
+	
+	public HashMap<String, Board> getGameBoards();
+	
+	public HashMap<String, Integer> getScore() ;
+	
 	public List<Dice> getDiceList();
 
 	public int getRolDiceCheck() ;
 	
 	public void setRolDiceCheck(int i) ;
 	
-	public HashMap<String, Integer> getScore() ;
+	public boolean isStartCheck();
 	
 	public void setStartCheck(boolean check) ;
 	
-	public HashMap<String, Board> getGameBoards();
-	
+    public int getCurrentTurn();
+    
+    public void setCurrentTurn(int i);
 
 }

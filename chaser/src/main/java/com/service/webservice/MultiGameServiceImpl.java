@@ -54,14 +54,16 @@ public class MultiGameServiceImpl implements GameService{
 	}
 		
 	public boolean diceCtrl(Gaming redisGame, String indexs) {
-		
+
 		//라운드가 남았는지 테스트
 		if(redisGame.getRound() < 13) {
 			
 			//턴 시간 오버되지 않았을시
 			if(!timeOverCheck(redisGame)) {
 				
+				
 				if(redisGame.getRolDiceCheck() == 0) {
+					
 					rolAllDice(redisGame);
 					redisGame.setRolDiceCheck(1);
 				}
@@ -72,6 +74,10 @@ public class MultiGameServiceImpl implements GameService{
 						rolDice(redisGame, Integer.parseInt(s)-1);
 
 					redisGame.setRolDiceCheck(redisGame.getRolDiceCheck()+1);
+				}
+				else {
+					//주사위 굴리기 초과
+					return false;
 				}
 
 			}
@@ -124,7 +130,7 @@ public class MultiGameServiceImpl implements GameService{
 	
 	
 	
-	// 게임 남은 시간초 비교 true면 시간초 over되어 round 줄임, false면 아직 라운드 진행중
+	// 게임 남은 시간초 비교 true면 시간초 over되어 turn 넘김, false면 아직 턴 진행중
 	private boolean timeOverCheck(Gaming redisGame) {
 		LocalDateTime startTime =redisGame.getStarTurnTime();
 		
@@ -142,6 +148,8 @@ public class MultiGameServiceImpl implements GameService{
 	
 	}
 	
+	
+	// 각 점수판에 넣을 수 있는 점수 계산
 	public HashMap<String, Integer> calcScoreCheck(Gaming redisGame) {
 		
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
@@ -176,7 +184,7 @@ public class MultiGameServiceImpl implements GameService{
 		
 		
 		if(chkNum.size()==5 && chkNum.contains(1)) {
-			result.put("Straight", 50);
+			result.put("Straight", 40);
 			result.put("Even Straight", 0);
 			
 		}
@@ -248,6 +256,7 @@ public class MultiGameServiceImpl implements GameService{
 		
 	}
 	
+	//보드판에 점수를 삽입
 	public boolean insertScore(String userId, Gaming redisGame, String insertSpace) {
 		
 		Board board = redisGame.getGameBoards().get(userId);
@@ -258,6 +267,10 @@ public class MultiGameServiceImpl implements GameService{
 		if(result.contains(insertSpace)) {
 			
 			redisGame.getGameBoards().get(userId).getBoard().replace(insertSpace, calcScoreCheck(redisGame).get(insertSpace));
+			
+			//insert 끝났으면 턴을 증가시킴
+			redisGame.setCurrentTurn(redisGame.getCurrentTurn()+1);
+			
 			return true ;
 		}
 		else
@@ -265,6 +278,32 @@ public class MultiGameServiceImpl implements GameService{
 
 	}
 	
+	//라운드 증가 시킬지 다음 턴 사람에게 넘길지 정함
+	public void nextUser(List<String> userList, Gaming redisGame) {
+		
+		if(userList.size()-1 >= redisGame.getCurrentTurn() ) {
+			redisGame.setCurrentTurn(0);
+			redisGame.setRound(redisGame.getRound()+1);
+			
+		}
+		else 
+			redisGame.setCurrentTurn(redisGame.getCurrentTurn()+1);
+
+	}
+	
+	//해당 유저의 턴이 맞는지 확인함
+	public boolean checkUserTurn(String userId, List<String> userList, Gaming redisGame) {
+		
+		int turn = redisGame.getCurrentTurn();
+		//중간에 유저가 나가서 인덱스 못찾는 경우 false
+		if(turn > userList.size()-1)
+			return false;
+		
+		if(userId.equals(userList.get(turn)))
+			return true;
+		else
+			return false;
+	}
 
 
 	/*Round 끝날때마다 클리어 타임이 얼마나 걸렸나 확인

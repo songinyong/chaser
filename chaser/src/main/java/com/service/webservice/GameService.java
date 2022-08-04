@@ -31,6 +31,8 @@ public interface GameService {
 	
 	public HashMap<Integer, Integer> getDiceList(Gaming gaming) ;
 	 
+	public void nextUser(List<String> userList, Gaming redisGame);
 	
+	public boolean checkUserTurn(String userId, List<String> userList, Gaming redisGame);
 
 }
