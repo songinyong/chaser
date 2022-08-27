@@ -58,7 +58,7 @@ public class User extends CreateTimeEntity {
 	private User(WebSocketSession session, String userid ) {
 		this.session = session ;
 		this.userid = userid ;
-		this.userNm = userid;
+		this.userNm = userid.split("-")[0];
 	}
 	
 

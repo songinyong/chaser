@@ -7,10 +7,11 @@ package com.service.webservice;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -53,7 +54,8 @@ public class MultiGameServiceImpl implements GameService{
 
 	}
 		
-	public boolean diceCtrl(Gaming redisGame, String indexs) {
+	public boolean diceCtrl(Gaming redisGame, String indexs, String userId) {
+
 
 		//라운드가 남았는지 테스트
 		if(redisGame.getRound() < 13) {
@@ -70,8 +72,17 @@ public class MultiGameServiceImpl implements GameService{
 					
 				else if(redisGame.getRolDiceCheck() > 0 && redisGame.getRolDiceCheck() <3) {
 					
-					for(String s : indexs.split("")) 
-						rolDice(redisGame, Integer.parseInt(s)-1);
+					if(indexs.equals("") || indexs == null)
+						return false;
+					
+					for(String s : indexs.split("")) {
+						
+						if(Integer.parseInt(s) > 0 || Integer.parseInt(s)<6 )
+						    rolDice(redisGame, Integer.parseInt(s)-1);
+						else
+							return false;
+					}
+						
 
 					redisGame.setRolDiceCheck(redisGame.getRolDiceCheck()+1);
 				}
@@ -83,9 +94,7 @@ public class MultiGameServiceImpl implements GameService{
 			}
 			else {
 				
-				if(redisGame.getRolDiceCheck() == 0) 
-					rolAllDice(redisGame);
-				//시간 오버일경우 임의적으로 점수 계산후 다음 차례에게 넘김
+				
 				return false ;
 			}
 			
@@ -128,10 +137,8 @@ public class MultiGameServiceImpl implements GameService{
 	}
 	
 	
-	
-	
 	// 게임 남은 시간초 비교 true면 시간초 over되어 turn 넘김, false면 아직 턴 진행중
-	private boolean timeOverCheck(Gaming redisGame) {
+	public boolean timeOverCheck(Gaming redisGame) {
 		LocalDateTime startTime =redisGame.getStarTurnTime();
 		
 		LocalDateTime currentTime = LocalDateTime.now();
@@ -150,7 +157,7 @@ public class MultiGameServiceImpl implements GameService{
 	
 	
 	// 각 점수판에 넣을 수 있는 점수 계산
-	public HashMap<String, Integer> calcScoreCheck(Gaming redisGame) {
+	private HashMap<String, Integer> calcScoreCheck(Gaming redisGame) {
 		
 		HashMap<String, Integer> result = new HashMap<String, Integer>();
 		
@@ -183,12 +190,12 @@ public class MultiGameServiceImpl implements GameService{
 			result.put("Chase off", 0);
 		
 		
-		if(chkNum.size()==5 && chkNum.contains(1)) {
+		if(chkNum.size()==5 && chkNum.contains(1) && !chkNum.contains(6)) {
 			result.put("Straight", 40);
 			result.put("Even Straight", 0);
 			
 		}
-		else if(chkNum.size()==5 && chkNum.contains(6)) {
+		else if(chkNum.size()==5 && chkNum.contains(6) && !chkNum.contains(1)) {
 			result.put("Straight", 0);
 			result.put("Even Straight", 30);
 			
@@ -203,7 +210,7 @@ public class MultiGameServiceImpl implements GameService{
 		if(chkNum.size()==2 ) {
 			int fourDiceCheck = 0 ;
 			for(int i =1; i<5; i++)
-				if(redisGame.getDiceList().get(0).equals(redisGame.getDiceList().get(i)))
+				if(redisGame.getDiceList().get(0).getNum()  == redisGame.getDiceList().get(i).getNum())
 					fourDiceCheck++;
 			
 			//fourDice
@@ -219,9 +226,14 @@ public class MultiGameServiceImpl implements GameService{
 			}
 				
 		}
+		else {
+			result.put("Four Dice", 0);
+			result.put("Full House", 0);
+			result.put("Choice", 0);
+		}
 		
 		if(chkNum.size()==3 ) {
-			result.put("Choice", 0);
+			result.put("Choice", redisGame.getDiceList().stream().collect(Collectors.summingInt(d -> d.getNum())));
 		}
 		else {
 			if(!result.containsKey("Choice"))
@@ -235,8 +247,26 @@ public class MultiGameServiceImpl implements GameService{
 		result.put("Five Beans", countNum[4]*5);
 		result.put("Six Beans", countNum[5]*6);
 		
+		
+		
 		return result ;
 			
+	}
+	
+	public HashMap<String, Integer> calcScoreCheck(Gaming redisGame, HashMap<String, Integer> board) {
+		
+		HashMap<String, Integer> result = calcScoreCheck(redisGame);
+		
+
+		for (Entry<String, Integer> entry : board.entrySet() ) {
+			if(entry.getValue() != -1)
+				result.remove(entry.getKey());
+
+		}
+		
+		 return result ;
+	
+		
 	}
 	
 	//점수를 넣을 수 있는 보드판 제공
@@ -252,6 +282,7 @@ public class MultiGameServiceImpl implements GameService{
 
 		}
 		
+		
 		return result ;
 		
 	}
@@ -266,10 +297,8 @@ public class MultiGameServiceImpl implements GameService{
 		//점수 넣을 수 있는 판이면, 그자리에 점수 계산해서 넣는다
 		if(result.contains(insertSpace)) {
 			
-			redisGame.getGameBoards().get(userId).getBoard().replace(insertSpace, calcScoreCheck(redisGame).get(insertSpace));
+			board.getBoard().replace(insertSpace, calcScoreCheck(redisGame).get(insertSpace));
 			
-			//insert 끝났으면 턴을 증가시킴
-			redisGame.setCurrentTurn(redisGame.getCurrentTurn()+1);
 			
 			return true ;
 		}
@@ -281,7 +310,7 @@ public class MultiGameServiceImpl implements GameService{
 	//라운드 증가 시킬지 다음 턴 사람에게 넘길지 정함
 	public void nextUser(List<String> userList, Gaming redisGame) {
 		
-		if(userList.size()-1 >= redisGame.getCurrentTurn() ) {
+		if(userList.size() <= redisGame.getCurrentTurn() +1) {
 			redisGame.setCurrentTurn(0);
 			redisGame.setRound(redisGame.getRound()+1);
 			
@@ -303,6 +332,25 @@ public class MultiGameServiceImpl implements GameService{
 			return true;
 		else
 			return false;
+	}
+	
+	//임의적으로 가장 높은 점수에 새김
+	public void autoInsertScore(Gaming redisGame, String userId) {
+		
+		if(redisGame.getRolDiceCheck() == 0) 
+			rolAllDice(redisGame);
+		
+        Comparator<Entry<String, Integer>> comparator = new Comparator<Entry<String, Integer>>() {            
+        	@Override            
+        	public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {                
+        		return e1.getValue().compareTo(e2.getValue());}        
+        	};
+
+		
+		Entry<String,Integer> maxKey = Collections.max(calcScoreCheck(redisGame, redisGame.getGameBoards().get(userId).getBoard()).entrySet(), comparator );
+
+		insertScore(userId,redisGame, maxKey.getKey());
+
 	}
 
 

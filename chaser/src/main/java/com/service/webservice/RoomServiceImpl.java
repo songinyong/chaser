@@ -1,6 +1,7 @@
 package com.service.webservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.service.domain.jpa.User;
 import com.service.domain.redis.Room;
 import com.service.domain.redis.RoomRepository;
 import com.service.web.MultiGaming;
@@ -147,6 +149,24 @@ public class RoomServiceImpl implements RoomService {
     		return new ResponseEntity<JSONObject>(resultObj, HttpStatus.ACCEPTED);
     	}
 		
+	}
+	
+	//이름 추가
+	public HashMap<String, String> getNameAndReady(Room room, HashMap<String, User> name) {
+		HashMap<String, String> result = new HashMap<String, String>();
+		
+		for(String userId : room.getUserList()) {
+			
+			if(room.getUserReady().contains(userId))
+			    result.put(name.get(userId).getUserNm(), "Ready");
+			else if(room.getRoomOwner().equals(userId))
+				result.put(name.get(userId).getUserNm(), "owner");
+			else
+				result.put(name.get(userId).getUserNm(), "");
+		}
+		
+		return result;
+				
 	}
 
 	

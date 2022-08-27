@@ -21,9 +21,9 @@ public interface GameService {
 	//룸 Id가 될 수도 있음
 	Gaming gameStart(String sessionId,JSONObject gameSet);
 	 
-	boolean diceCtrl(Gaming redisGame, String indexs);
+	boolean diceCtrl(Gaming redisGame, String indexs, String userId);
 
-	HashMap<String, Integer> calcScoreCheck(Gaming redisGame) ;
+	public HashMap<String, Integer> calcScoreCheck(Gaming redisGame, HashMap<String, Integer> board);
 	
 	public List<String> boardCheck(String userId, Gaming redisGame);
 		
@@ -34,5 +34,9 @@ public interface GameService {
 	public void nextUser(List<String> userList, Gaming redisGame);
 	
 	public boolean checkUserTurn(String userId, List<String> userList, Gaming redisGame);
+	
+	public boolean timeOverCheck(Gaming redisGame);
+	
+	public void autoInsertScore(Gaming redisGame, String userId);
 
 }
