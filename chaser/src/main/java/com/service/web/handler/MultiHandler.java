@@ -218,13 +218,17 @@ public class MultiHandler extends TextWebSocketHandler  {
             				for (String u : roomMap.get(roomId).getUserList()) 
             					sendMessage(userMap.get(u).getSession(), makeJson(result)); 
         				}
-        				} // -> 방에 한명이라도 남아 있을경우
+        				} // -> 방에 한명이라도 남아 있을경우 END
         				else {
+            				HashMap soloMessage = new HashMap();
+            				soloMessage.put("status", 2);
+            				sendMessage(session, makeJson(soloMessage));
+        					
         					roomRepo.delete(roomMap.get(roomId));
             				roomMap.get(roomId).getUserList().clear();
             				roomMap.replace(roomId, null);      					
             				
-        				} // -> 모든 인원이 사라진 방은 삭제함
+        				} // -> 모든 인원이 사라진 방은 삭제함 
         				
 
         			}
@@ -339,7 +343,7 @@ public class MultiHandler extends TextWebSocketHandler  {
         			String userNm = (String) obj.get("userNm");
         			
         			userMap.get(session.getId()).setUserNm(userNm);
-    				result.put("ready", true);
+    				result.put("status", "nameChg");
     				result.put("userNm", userNm);        			
         			sendMessage(session, makeJson(result));
         				
@@ -671,12 +675,22 @@ public class MultiHandler extends TextWebSocketHandler  {
     	
     	if(roomId != null) {
     		roomService.userOut(roomMap.get(userMap.get(session.getId()).getRoomId()), session.getId());
-    		result.put("result", true);
-    		result.put("userId", session.getId());  
-    		result.put("mesg", "사용자의 세션 연결이 끊겼습니다");
     		
-    		for (String u : roomMap.get(roomId).getUserList()) 
-    			sendMessage(userMap.get(u).getSession(), makeJson(result)); 
+    		if(roomMap.get(roomId).getUserList().size() > 0) {
+	    		result.put("result", true);
+	    		result.put("userId", session.getId());  
+	    		result.put("mesg", "사용자의 세션 연결이 끊겼습니다");
+	    		
+	    		for (String u : roomMap.get(roomId).getUserList()) 
+	    			sendMessage(userMap.get(u).getSession(), makeJson(result)); 
+    		
+    		}
+    		else {
+				roomRepo.delete(roomMap.get(roomId));
+				roomMap.get(roomId).getUserList().clear();
+				roomMap.replace(roomId, null);     			
+    		}
+
     	}
     	
 		userMap.remove(session.getId());

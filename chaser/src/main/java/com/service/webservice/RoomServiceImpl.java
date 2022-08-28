@@ -116,7 +116,7 @@ public class RoomServiceImpl implements RoomService {
 	
 		
 
-	//현재 생성된 방 목록들의 상태 보여줌
+	//현재 생성된 방 목록들의 상태 보여줌 api
 	public ResponseEntity<JSONObject> getRoomList() {
     	JSONObject resultObj = new JSONObject();  
     	
