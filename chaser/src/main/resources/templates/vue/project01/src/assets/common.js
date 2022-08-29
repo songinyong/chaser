@@ -7,7 +7,7 @@ import { getCurrentInstance} from "@vue/runtime-core";
 import router from '@/router/index.js';
 //const app = getCurrentInstance();
 //const $webSocket = app.appContext.config.globalProperties.$webSocket;
-const $webSocket = new WebSocket("ws://192.168.219.104:8088/websocket")
+const $webSocket = new WebSocket("ws://34.64.92.123:8088/websocket")
 
 var timer ;
 //게임 시간 주기
@@ -43,7 +43,7 @@ const methods = {
     var receiveData = event.data; // 수신 data 
     var obj2 = JSON.parse(receiveData);
     const url = window.location.href;
-    console.log(obj2);
+    //console.log(obj2);
     var i = 0;
     var userList = [];
     //window.location.href = "http://localhost:8080/room" ;
@@ -69,10 +69,17 @@ const methods = {
         }
       }
       else {
+        for(i=4; i> userList.length ; i--) {
+          document.getElementById('view'+(i)).innerHTML = "";
+        }
+
         for(i=0; i< userList.length; i++) {
           document.getElementById('user'+(i+1)).innerHTML = userList[i];  
           if(userList[i] == obj2.currentUser)
               document.getElementById('stat'+(i+1)).innerHTML = "turn";
+
+          //document.getElementById('view'+(i+1)).innerHTML = "<button onclick=\"methods.boardCheck(" +(i+1)+ ")\">화면전환</button>";
+          
 
       }
 
@@ -96,6 +103,8 @@ const methods = {
     else if( obj2.status == 4 ) {
       router.push(url + '/game');
       methods.setTimer(time);
+
+      
       
     }
     // 다이스 점수 계산
@@ -135,6 +144,7 @@ const methods = {
             document.getElementById('stat'+(i+1)).innerHTML = "turn";
       }
       document.getElementById('round').innerHTML  = obj2.round
+
     }
     else if(obj2.status == 'chat') {
       document.getElementById("chatMsg").append(obj2.userNm + ": " + obj2.chatMsg+"\r\n");
@@ -181,6 +191,63 @@ const methods = {
       document.getElementById('userName').innerHTML = obj2.userNm ;
       userNm = obj2.userNm ;
     }
+    else if(obj2.status == 'end') {
+  
+      var endMesg = "";
+      var userKey = Object.keys(obj2.score);
+
+      methods.stopTimer(timer);
+
+      for(i=0; i<userKey.length; i++) {
+        endMesg = endMesg + userKey[i] +"점수는:" +obj2.score[userKey[i]] + "\n"
+      }
+      
+
+
+      if (window.confirm(endMesg + "\n 방으로 돌아가시겠습니까?"))
+      {
+          // They clicked Yes
+          router.push(url + '/room');
+      }
+      else
+      {
+          methods.roomOut()
+          // They clicked no
+          router.push(url + '/');
+      }
+    }
+    // 세션이 끊겼을때
+    else if(obj2.status == 'close') {
+
+      userList = Object.keys(obj2.userList);
+      for(i=0; i<4; i++) {
+        document.getElementById('user'+(i+1)).innerHTML = "";  
+        document.getElementById('stat'+(i+1)).innerHTML = "";
+      }
+      methods.setStat(obj2.mesg);
+      if(obj2.currentUser == undefined) {
+        
+        for(i=0; i< userList.length; i++) {
+          document.getElementById('user'+(i+1)).innerHTML = userList[i];  
+        //ready와 owner 표시
+          document.getElementById('stat'+(i+1)).innerHTML = obj2.userList[userList[i]];
+        }
+      }
+      else {
+        for(i=4; i> userList.length ; i--) {
+          document.getElementById('view'+(i)).innerHTML = "";
+        }
+
+        for(i=0; i< userList.length; i++) {
+          document.getElementById('user'+(i+1)).innerHTML = userList[i];  
+          if(userList[i] == obj2.currentUser)
+              document.getElementById('stat'+(i+1)).innerHTML = "turn";
+
+          //document.getElementById('view'+(i+1)).innerHTML = "<button onclick=\"methods.boardCheck(" +(i+1)+ ")\">화면전환</button>";
+      }
+
+    }
+  }
     
 
     else ;

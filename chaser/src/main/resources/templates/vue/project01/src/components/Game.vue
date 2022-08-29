@@ -177,7 +177,7 @@ export default {
     });
 
     document.querySelectorAll('.board').forEach((board) => {
-    
+        board.innerHTML = "";
         board.addEventListener('click', function(event) {
         
             document.getElementById('checkedBoard').value = event.target.id ;
@@ -209,7 +209,11 @@ export default {
         if(this.$checkSecurity(document.getElementById('chatInput') ))
             this.$sendChat(document.getElementById('chatInput').value );
  
+    },
+    screenShare(obj) {
+        this.$
     }
+
 
   }
 }

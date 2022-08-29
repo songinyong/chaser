@@ -69,7 +69,8 @@ export default {
           this.$roomEnter()
     },
     getRoomList() {
-      fetch('http://localhost:8088/roomList')
+      //console.log(window.location.hostname)
+      fetch('http://34.64.92.123:8088/roomList')
       .then(response =>{
           return response.json();
       }).then(data =>{
