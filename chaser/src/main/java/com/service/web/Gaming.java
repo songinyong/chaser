@@ -23,6 +23,8 @@ public interface Gaming {
 	
 	public HashMap<String, Integer> getScore() ;
 	
+	public void setScore(int score, String userId);
+	
 	public List<Dice> getDiceList();
 
 	public int getRolDiceCheck() ;

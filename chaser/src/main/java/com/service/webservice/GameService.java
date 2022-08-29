@@ -12,6 +12,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 import com.service.domain.Dice;
+import com.service.domain.jpa.User;
 import com.service.web.Gaming;
 
 
@@ -38,5 +39,7 @@ public interface GameService {
 	public boolean timeOverCheck(Gaming redisGame);
 	
 	public void autoInsertScore(Gaming redisGame, String userId);
+	
+	public void calcEndscore(Gaming redisGame, List<String> userList, HashMap<String, User> userMap);
 
 }
