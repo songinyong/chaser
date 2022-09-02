@@ -11,14 +11,15 @@
           </ul>
         </div>
         <div class="roomButton_location">
-          <label>방 이름</label>
+          <!--<label>방 이름</label>
           <input type="text" id="roomName" name="name" maxlength='15'/>
           <button @click="roomSearch()">방 검색</button>
-          <br/>
+          <button onclick="test()">빠른입장</button>
+          <br/>-->
           <label>방 아이디</label>
           <input type="text" id="roomId" name="name" maxlength='5'/>
           <button @click="roomEnter()">입장</button>
-          <button onclick="test()">빠른입장</button>
+        
           <button @click="this.$roomCreate()">방생성</button>
         </div>
       </div>
@@ -79,7 +80,6 @@ export default {
       },
 
       getRoomListcallBack(data) {
-        console.log(data.result)
        if(data.result) {
         
         const ul = document.getElementById('roomList');
@@ -98,6 +98,7 @@ export default {
           const addValue 
             = data.roomList[i].roomTitle + "#" + data.roomList[i].roomId +":" + checkStart +" " + userNum +"/ 4";
           
+            var roomId =  data.roomList[i].roomId;
           // 2. 추가할 li element 생성
           // 2-1. 추가할 li element 생성
           const li = document.createElement("li");
@@ -106,6 +107,10 @@ export default {
           // 2-3. li에 text node 추가 
           const textNode = document.createTextNode(addValue);
           li.appendChild(textNode);
+          li.addEventListener("click",function(){
+            
+            document.getElementById('roomId').value = roomId ;
+        });
           
           // 3. 생성된 li를 ul에 추가
           document
@@ -123,7 +128,8 @@ export default {
 </script>
 
 <style scoped>
-.container {  display: grid;
+.container {  
+  display: grid;
   grid-template-columns: 1.1fr 1fr 0.9fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 0px 0px;

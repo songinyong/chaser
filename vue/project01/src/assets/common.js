@@ -16,6 +16,9 @@ var time=30;
 //유저의 아이디
 var userId;
 
+//유저가 서버에 보내는 명령어 호출 횟수를 제한
+var limitTimeCheck = new Date();
+
 //유저의 이름
 var userNm ;
 //현재 보고 있는 유저의 보드
@@ -202,8 +205,6 @@ const methods = {
         endMesg = endMesg + userKey[i] +"점수는:" +obj2.score[userKey[i]] + "\n"
       }
       
-
-
       if (window.confirm(endMesg + "\n 방으로 돌아가시겠습니까?"))
       {
           // They clicked Yes
@@ -249,7 +250,6 @@ const methods = {
     }
   }
     
-
     else ;
 
   },
@@ -266,12 +266,15 @@ const methods = {
 
   //2. 방 생성
   roomCreate : () => {
+
     var msg = {
       "roomStatus" : "create"
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);  
+
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);  
   },
   //2. 방 입장
   roomEnter : () => {
@@ -281,7 +284,8 @@ const methods = {
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);   
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);   
   },
   //2. 방 검색
   roomSearch : () => {
@@ -292,7 +296,8 @@ const methods = {
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);       
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);       
   },
   //2. 이름 변경
   nameChange : () => {
@@ -303,7 +308,9 @@ const methods = {
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);   
+
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);   
 
   },
 
@@ -315,7 +322,8 @@ const methods = {
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);  
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);  
   },
 
   //3. 게임 시작
@@ -326,7 +334,8 @@ const methods = {
       }
       var jsonData = JSON.stringify(msg);
       // 세션리스트에 메시지를 송신한다.
-      $webSocket.send(jsonData);   
+      if(methods.setLimitTimer(limitTimeCheck))
+          $webSocket.send(jsonData);   
   
   },
 
@@ -337,7 +346,8 @@ const methods = {
         }
         var jsonData = JSON.stringify(msg);
         // 세션리스트에 메시지를 송신한다.
-        $webSocket.send(jsonData);   
+        if(methods.setLimitTimer(limitTimeCheck))
+            $webSocket.send(jsonData);   
     
     },
 
@@ -374,7 +384,8 @@ const methods = {
 
         var jsonData = JSON.stringify(msg);
         // 세션리스트에 메시지를 송신한다.
-        $webSocket.send(jsonData);  
+        if(methods.setLimitTimer(limitTimeCheck))
+            $webSocket.send(jsonData);  
     },
 
     //4. 보드판 선택하기
@@ -392,7 +403,8 @@ const methods = {
         var jsonData = JSON.stringify(msg);
 
         // 세션리스트에 메시지를 송신한다.
-        $webSocket.send(jsonData);  
+        if(methods.setLimitTimer(limitTimeCheck))
+            $webSocket.send(jsonData);  
 
       }
     },
@@ -473,6 +485,21 @@ const methods = {
         }, 1000)
       },
 
+      //서버 호출 횟수 제한 타이머
+      setLimitTimer : (preTime) => {
+        var time = new Date();
+
+        if( time - preTime > 800) {
+          limitTimeCheck = time;
+          return true;
+        }
+        else {
+          
+          return false;
+        }
+      },
+
+
       stopTimer : (timer) => {
         clearInterval(timer);
       },
@@ -484,6 +511,7 @@ const methods = {
         //document.getElementById("statMsg").scrollTop(document.getElementById(("statMsg").prop('scrollHeight')));
       },
 
+      //채팅 보내기
       sendChat : (chat) => {
 
         if(chat != "") {
@@ -493,7 +521,8 @@ const methods = {
           }
           var jsonData = JSON.stringify(msg);
           // 세션리스트에 메시지를 송신한다.
-          $webSocket.send(jsonData); 
+          if(methods.setLimitTimer(limitTimeCheck))
+              $webSocket.send(jsonData); 
         }
       }
       
