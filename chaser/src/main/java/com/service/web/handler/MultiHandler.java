@@ -661,8 +661,15 @@ public class MultiHandler extends TextWebSocketHandler  {
     												.userid(session.getId())
     														.build());
     	
-    	
     	HashMap<String, Object> result = new HashMap();
+    	result.put("status", "numofUser");
+    	result.put("numOfuser", sessionList.size());
+    	
+    	for(WebSocketSession s: sessionList) 
+    		sendMessage(s, makeJson(result));
+    		
+    		
+    	
     	result.put("status", "init");
     	result.put("userNm", userMap.get(session.getId()).getUserNm());
     	result.put("userId", session.getId());
@@ -678,6 +685,12 @@ public class MultiHandler extends TextWebSocketHandler  {
     	//세션 리스트에서 제외
     	sessionList.remove(session);
     	HashMap result = new HashMap();
+    	
+    	//접속자수 변화 알림
+    	result.put("status", "numofUser");
+    	result.put("numOfUser", sessionList.size());
+    	for(WebSocketSession s: sessionList) 
+    		sendMessage(s, makeJson(result));
     	
     	String roomId = userMap.get(session.getId()).getRoomId() ;
     	
