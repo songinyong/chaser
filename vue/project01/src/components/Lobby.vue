@@ -2,10 +2,12 @@
 
   <div class="lobby">
     <div class="container">
-      <div class="picture_zone"><img alt="Vue logo" src="@/assets/logo.png"/></div>
+      <div class="picture_zone"><img alt="Vue logo" src="@/assets/dice.jpg" width="200" height="200" style="width:250px; height:250px"/></div>
       <div class="room_zone">
         <div class="roomList_location">
-          <button @click="getRoomList()">새로고침</button>
+          <h4 id=numOfUser></h4>
+          
+          <button @click="getRoomList()" class="custom-btn main_btn"><span>새로고침</span></button>
           <h3>방목록</h3>
           <ul id="roomList">
           </ul>
@@ -18,9 +20,10 @@
           <br/>-->
           <label>방 아이디</label>
           <input type="text" id="roomId" name="name" maxlength='5'/>
-          <button @click="roomEnter()">입장</button>
+          <button @click="roomEnter()" class="custom-btn main_btn"><span>입장</span></button>
+          <br/>
         
-          <button @click="this.$roomCreate()">방생성</button>
+          <button @click="this.$roomCreate()" class="custom-btn main_btn"><span>방생성</span></button>
         </div>
       </div>
       <div class="userInfo_zone">
@@ -28,7 +31,13 @@
         <div class="userInfo_location">
           <h3 id="userName"></h3>
           <input type="text" id="userNm" name="name" maxlength='10'/>
-          <button @click="nameChange()">이름변경</button>
+          <button @click="nameChange()" class="custom-btn main_btn"><span>이름설정</span></button>
+        </div>
+        
+        <div class="update_list">
+          <h3>
+            CSS, 레이아웃 작업중
+          </h3>
         </div>
       </div>
   <div class="gameInfo_zone"></div>
@@ -166,13 +175,44 @@ export default {
   grid-template-areas:
     ". . ."
     ". userInfo_location ."
-    ". . .";
+    ". update_list .";
   grid-area: userInfo_zone;
 }
 
-.userInfo_location { grid-area: userInfo_location; }
+.userInfo_location { grid-area: userInfo_location }
+.update_list { grid-area: update_list }
 
 .gameInfo_zone { grid-area: gameInfo_zone; }
+
+
+
+.custom-btn {
+  width: 110px;
+  height: 40px;
+  padding: 10px 25px;
+  border: 2px solid #000;
+  font-family: 'Lato', sans-serif;
+  font-weight: 150;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+
+.main_btn {
+  transition: all 0.3s ease;
+
+}
+
+.main_btn:hover {
+   box-shadow:
+   -7px -7px 20px 0px #fff9,
+   -4px -4px 5px 0px #fff9,
+   7px 7px 20px 0px #0002,
+   4px 4px 5px 0px #0001;
+}
 
 
 

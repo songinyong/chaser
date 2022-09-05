@@ -7,7 +7,10 @@
           <input type="text" id="titleInput"  maxlength='20'/>
           <button @click="titleChange()">변경</button>
         </div>
-        <div class="roomStatInfo_location"></div>
+        <div class="roomStatInfo_location">
+          <h4 id=numOfUser></h4>
+
+        </div>
       </div>
       <div class="user_zone">
           <div class="userInfo_location">
