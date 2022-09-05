@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.service.domain.Board;
 import com.service.domain.Dice;
+import com.service.domain.jpa.User;
 import com.service.domain.redis.RoomRepository;
 import com.service.web.Gaming;
 import com.service.web.MultiGaming;
@@ -351,6 +352,20 @@ public class MultiGameServiceImpl implements GameService{
 
 		insertScore(userId,redisGame, maxKey.getKey());
 
+	}
+	
+	//score 계산 
+	public void calcEndscore(Gaming redisGame, List<String> userList, HashMap<String, User> userMap) {
+		int score = 0;
+		for(String u : userList ) {
+			score = redisGame.getGameBoards().get(u).getBoard().entrySet().stream().mapToInt(entry-> 
+				entry.getValue()
+			).sum();	
+			
+			redisGame.setScore(score, userMap.get(u).getUserNm());
+			
+		}
+		
 	}
 
 

@@ -53,4 +53,8 @@ public class MultiGaming implements Gaming {
 		for(int i=0; i<5; i++)
 			diceList.add(new Dice());
 	}
+	
+	public void setScore(int score, String userId) {
+		this.score.put(userId, score);
+	}
 }
