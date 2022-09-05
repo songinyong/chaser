@@ -28,6 +28,7 @@
                 </div>
             </div>
             <div class="time_location">
+                <h4 id=numOfUser></h4>
                 <div class="timer_zone">
                     <div id="timer"></div>
                     <label>라운드:</label><div id="round">1</div>
@@ -39,39 +40,39 @@
             <div class="board_location">
                 <input type="hidden" id="checkedBoard"/>
                 <h3 align="left">보드</h3>
-                <table border="1" width ="400" height="300" >
+                <table border="1" width ="400" height="300" background="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/paper.jpg" >
                     
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Chase off</td>
                         <td style="width:15%;" id="Chase off" class="board"></td>
                         <td style="width:35%;">Aces</td>
                         <td style="width:15%;" id="Aces" class="board"></td>            
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Straight</td>
                         <td style="width:15%;" id="Straight" class="board"></td>
                         <td style="width:35%;">Two Beans </td>
                         <td style="width:15%;" id="Two Beans" class="board"></td>        
                     </tr>     
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Even Straight</td>
                         <td style="width:15%;" id="Even Straight" class="board"></td>
                         <td style="width:35%;">Three Beans</td>
                         <td style="width:15%;" id="Three Beans" class="board"></td>          
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Four Dice</td>
                         <td style="width:15%;" id="Four Dice" class="board"></td>
                         <td style="width:35%;">Four Beans</td>
                         <td style="width:15%;" id="Four Beans" class="board"></td>          
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;" >Full House</td>
                         <td style="width:15%;" id="Full House" class="board"></td>
                         <td style="width:35%;">Five Beans</td>
                         <td style="width:15%;" id="Five Beans" class="board"></td>        
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Choice</td>
                         <td style="width:15%;" id="Choice" class="board"></td>
                         <td style="width:35%;">Six Beans</td>
@@ -138,7 +139,9 @@ const methods = {
   chgBoardColor: (id) => {
         document.querySelectorAll('.board').forEach((board) => {
             if(board.id != id)
-                document.getElementById(board.id).style.backgroundColor = "#D9E5FF";
+                //document.getElementById(board.id).style.backgroundColor = "#D9E5FF";
+                document.getElementById(board.id).style.backgroundColor = "#11ffee00";
+                
         });
     },
   chgDiceColor : () => {
@@ -162,7 +165,7 @@ export default {
 
         if(clicked.has(event.target.id)) {
             clicked.delete(event.target.id);
-            document.getElementById(event.target.id).style.backgroundColor ="#EEE6C4"
+            document.getElementById(event.target.id).style.backgroundColor ="transparent"
             
         }
             

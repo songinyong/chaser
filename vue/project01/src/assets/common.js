@@ -5,10 +5,11 @@
 
 import { getCurrentInstance} from "@vue/runtime-core";
 import router from '@/router/index.js';
+//import logger from 'js/logger.js'
 //const app = getCurrentInstance();
 //const $webSocket = app.appContext.config.globalProperties.$webSocket;
 const $webSocket = new WebSocket("ws://34.64.92.123:8088/websocket")
-
+//const $webSocket = new WebSocket("ws://localhost:8088/websocket")
 var timer ;
 //게임 시간 주기
 var time=30;
@@ -56,6 +57,14 @@ const methods = {
       userId = obj2.userId;
       document.getElementById('userName').innerHTML = userNm;
     }
+    /*
+    else if(obj2.status =='numofUser') {
+
+      console.log(document.getElementById('numOfUsser'))
+      userNm = obj2.numOfUser;
+      userId = obj2.userId;
+      document.getElementById('numOfUser').innerHTML = "접속자수: " + obj2.numOfUser +"명";
+    }*/
     else if(obj2.status == 0) {
 
       document.querySelectorAll('.user').forEach((user) => {
