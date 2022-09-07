@@ -4,7 +4,7 @@ module.exports = defineConfig({
 
   devServer: {
     // 'auto' | 'all' [string] here
-    disableHostCheck: true
+    allowedHosts: "all"
   }
   
 }
