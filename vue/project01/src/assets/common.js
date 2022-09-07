@@ -8,8 +8,8 @@ import router from '@/router/index.js';
 //import logger from 'js/logger.js'
 //const app = getCurrentInstance();
 //const $webSocket = app.appContext.config.globalProperties.$webSocket;
-//const $webSocket = new WebSocket("ws://34.64.92.123:8088/websocket")
-const $webSocket = new WebSocket("ws://localhost:8088/websocket")
+const $webSocket = new WebSocket("ws://34.64.92.123:8088/websocket")
+//const $webSocket = new WebSocket("ws://localhost:8088/websocket")
 var timer ;
 //게임 시간 주기
 var time=30;
