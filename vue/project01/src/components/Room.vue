@@ -13,7 +13,9 @@
         </div>
       </div>
       <div class="user_zone">
+          
           <div class="userInfo_location">
+            <h3 align="center">접속유저</h3>
             <table border="1" width ="300" height="200" align="center" style="table-layout:fixed">
                 <tr bgcolor="#EEE6C4" >
                     <td id="user1" class="user" style="word-break:break-all"></td>
@@ -38,7 +40,7 @@
       </div>
       <div class="chat_zone">
           <h3>채팅창</h3>
-          <textarea id="chatMsg" name="chatMsg" rows="20"></textarea>
+          <textarea id="chatMsg" name="chatMsg" rows="20" style="background-image:url('https://dx-sprint.s3.ap-northeast-2.amazonaws.com/letter.png')"></textarea>
           <br/>
           <input type="text" id="chatInput"  maxlength='50'/>
           <br/>

@@ -1,10 +1,13 @@
+
 <template>
+
 <div class="container">
     <div class="game">
         <div class="Info_zone">
             <div class="user_location">
+                  <h3 align="center">진행유저</h3>
                   <div class="userInfo_zone">
-                    <table border="1" width ="350" height="200" align="center" style="table-layout:fixed">
+                    <table border="1" width ="400" height="200" align="center" style="table-layout:fixed">
                         
                         <tr bgcolor="#EEE6C4" >
                             <td id="user1" class="user" style="word-break:break-all"></td>
@@ -39,8 +42,8 @@
         <div class="main_zone">
             <div class="board_location">
                 <input type="hidden" id="checkedBoard"/>
-                <h3 align="left">보드</h3>
-                <table border="1" width ="400" height="300" background="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/paper.jpg" >
+                <h3 align="center">보드</h3>
+                <table border="1" width ="400" height="300" background="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/paper.jpg" style='font-family:"Cookie", cursive; font-size:120%' >
                     
                     <tr bgcolor="transparent">
                         <td style="width:35%;">Chase off</td>
@@ -90,28 +93,28 @@
             </div>
             <div class="chat_location">
                 <h3>채팅창</h3>
-                <textarea id="chatMsg" name="chatMsg" rows="20"></textarea>
+                <textarea id="chatMsg" name="chatMsg" rows="20" style="background-image:url('https://dx-sprint.s3.ap-northeast-2.amazonaws.com/letter.png')"></textarea>
                 <input type="text" id="chatInput"  maxlength='50'/>
                 <button @click="sendChat()">채팅보내기</button>
             </div>
             <div class="dice_location">
                 <h3>주사위</h3>
-                <table border="1" width ="70" height="300" align="center">
+                <table border="1" width ="70" height="300" align="center" id="dice_list">
                     
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="one" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="one" class="dice"><img id="one dice" src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="two" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="two" class="dice"><img id="two dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="three" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="three" class="dice"><img id="three dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="four" class="dice">1</td>
+                    <tr bgcolor="transparent" >
+                        <td id="four" class="dice"><img  id="four dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="five" class="dice">1</td>
+                    <tr bgcolor="transparent" >
+                        <td id="five" class="dice"><img id="five dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
                 </table>
 
@@ -147,7 +150,7 @@ const methods = {
   chgDiceColor : () => {
         document.querySelectorAll('.dice').forEach((dice) => {
             
-            document.getElementById(dice.id).style.backgroundColor = "#EEE6C4";
+            document.getElementById(dice.id).style.backgroundColor = "transparent";
         });
   },
 
@@ -159,19 +162,21 @@ export default {
   mounted() {
     
     document.querySelectorAll('.dice').forEach((dice) => {
-    
+
         dice.addEventListener('click', function(event) {
         
+            
 
-        if(clicked.has(event.target.id)) {
-            clicked.delete(event.target.id);
-            document.getElementById(event.target.id).style.backgroundColor ="transparent"
+
+        if(clicked.has(dice.id)) {
+            clicked.delete(dice.id);
+            document.getElementById(dice.id).style.backgroundColor ="transparent"
             
         }
             
         else {
-            clicked.add(event.target.id);
-            document.getElementById(event.target.id).style.backgroundColor ="#FFFFFF"
+            clicked.add(dice.id);
+            document.getElementById(dice.id).style.backgroundColor = "#EEE6C4"
             
         }
 
@@ -272,7 +277,16 @@ export default {
 
 .dice_location { grid-area: dice_location; }
 
+@import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
 
+#main_board {
+    font-family: 'Ms Madi', cursive;
+}
+
+#dice_list {
+    border-collapse:collapse;
+    border:none;
+}
 
 
 </style>
