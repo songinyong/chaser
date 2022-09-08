@@ -1,20 +1,19 @@
 <template>
   <div class="room">
+
+
+
     <div class="container">
-      <div class="roomInfo_zone">
-        <div class="room_tile_location">
+      <div class="info_zone"></div>
+      <div class="main_zone">
+        <div class="room_zone">
+
           <label id="room_title">방이름</label>
           <input type="text" id="titleInput"  maxlength='20'/>
           <button @click="titleChange()">변경</button>
         </div>
-        <div class="roomStatInfo_location">
-          <h4 id=numOfUser></h4>
 
-        </div>
-      </div>
-      <div class="user_zone">
-          
-          <div class="userInfo_location">
+      <div class="user_zone">    
             <h3 align="center">접속유저</h3>
             <table border="1" width ="300" height="200" align="center" style="table-layout:fixed">
                 <tr bgcolor="#EEE6C4" >
@@ -30,13 +29,10 @@
                     <td id="stat4" class="user" style="word-break:break-all"></td>
                 </tr>
             </table>
-          </div>
-        <div class="start_location">
+        
             <button @click="this.$gameStart()">시작</button>
-        </div>
-        <div class="out_location">
-                <button @click="this.$roomOut()">퇴장</button>
-        </div>
+            <button @click="this.$roomOut()">퇴장</button>
+        
       </div>
       <div class="chat_zone">
           <h3>채팅창</h3>
@@ -47,19 +43,37 @@
           <button @click="sendChat()">채팅보내기</button>
       </div>
       <div class="stat_zone">
+        <div class="stat_location">
           <h3>상태메시지</h3>
           <textarea id="statMsg" name="statMsg" rows="5"></textarea>
+        </div>
       </div>
     </div>
-
+  </div>
   </div>
 </template>
-
+<script setup>
+  import { useHead } from "@vueuse/head"
+  
+  </script>
 <script>
 
 
 export default {
   name: 'roomComponent',
+  created() {
+      document.title = 'chaser';
+    },
+    setup() {
+  useHead({
+    meta: [
+      { name: 'viewport', content: 'width=device-width,initial-scale=1.0,user-scalable=no' },
+      { charset: 'utf-8' },
+
+    ]
+
+  })
+  },
   methods : {
       sendChat() {
         this.$inputMaxChk(document.getElementById('chatInput') , 50)
@@ -78,54 +92,44 @@ export default {
 </script>
 
 <style scoped>
+
 .container {  display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 0.8fr 1.2fr 1fr;
+  grid-template-rows: 0.3fr 1.7fr 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
-    "roomInfo_zone user_zone chat_zone"
-    "roomInfo_zone user_zone chat_zone"
-    ". stat_zone .";
+    "info_zone info_zone info_zone"
+    "main_zone main_zone main_zone"
+    "main_zone main_zone main_zone";
 }
 
-.stat_zone { grid-area: stat_zone; }
+.info_zone { grid-area: info_zone; }
 
-.user_zone {  display: grid;
-  grid-template-columns: 0.2fr 1.4fr 1.4fr;
+.main_zone {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
-    "userInfo_location userInfo_location userInfo_location"
-    "userInfo_location userInfo_location userInfo_location"
-    ". start_location out_location";
-  grid-area: user_zone;
+    "room_zone user_zone chat_zone"
+    "room_zone user_zone chat_zone"
+    ". stat_zone .";
+  grid-area: main_zone;
 }
-
-.userInfo_location { grid-area: userInfo_location; }
-
-.start_location { grid-area: start_location; }
-
-.out_location { grid-area: out_location; }
 
 .chat_zone { grid-area: chat_zone; }
 
-.roomInfo_zone {  display: grid;
-  grid-template-columns: 0.9fr 1.3fr 0.8fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    ". room_tile_location ."
-    ". roomStatInfo_location ."
-    ". roomStatInfo_location .";
-  grid-area: roomInfo_zone;
-}
+.user_zone { grid-area: user_zone; }
 
-.room_tile_location { grid-area: room_tile_location; }
+.room_zone { grid-area: room_zone; }
 
-.roomStatInfo_location { grid-area: roomStatInfo_location; }
+.stat_zone { grid-area: stat_zone; }
+
+
+
+
+
 
 
 </style>

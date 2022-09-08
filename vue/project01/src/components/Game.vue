@@ -158,6 +158,9 @@ const methods = {
 }
 export default {
   name: 'gameComponent',
+  created() {
+      document.title = 'chaser';
+    },
 
   mounted() {
     

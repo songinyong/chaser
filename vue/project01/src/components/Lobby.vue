@@ -46,15 +46,32 @@
   </div>
 
 </template>
+<script setup>
+import { useHead } from "@vueuse/head"
 
+</script>
 <script>
 
 export default {
   name: 'LobbyComponent',
+  created() {
+      document.title = 'chaser';
+    },
   mounted() {
     this.getRoomList()
 
   },
+  setup() {
+  useHead({
+    meta: [
+    { name: 'viewport', content: 'width=device-width,initial-scale=1.0,user-scalable=no' },
+    { charset: 'utf-8' },
+
+  ]
+
+  })
+},
+  
   methods : {
     nameChange() {
 

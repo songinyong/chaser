@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@vueuse/head": "^0.7.9",
+    "vue-head": "^2.2.0",
     "vue-router": "^4.0.13"
   }
 }
