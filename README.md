@@ -16,8 +16,15 @@ http://chasergam.xyz/
 송인용 : 1인 개발로 백엔드 개발, 프론트엔드, 인프라 관리등 전체적인 프로젝트 관리
 
 ## 개발환경
-SprintBoot, vue.js, GCP(젠킨스, 배포서버), AWS(PostgreSQL, Redis 인스턴스 운영) 
+SpringBoot, vue.js, GCP(젠킨스, 배포서버), AWS(PostgreSQL, Redis 인스턴스 운영), S3(리소스 저장 서버)
 
+SpringBoot : 웹 소켓 서버 및 api 서버 구현
+
+vue.js : 사용자 플레이 화면
+
+젠킨스를 통해 CI/CD 환경 구축
+
+<img src=https://user-images.githubusercontent.com/30370933/189252036-9ca542b0-c05c-4526-b01e-edc712fbbd71.PNG width="400" height="400">
 
 ## 개발 코드
 
@@ -38,8 +45,9 @@ chaser/second-sprint : chaser 게임 레이아웃 및 CSS 개선 단계
 
 !현재 레이아웃 수정 작업진행중으로 플레이화면과 달라질 수 있습니다.
 
+<img src=https://user-images.githubusercontent.com/30370933/189251294-2f9efb7b-c530-48d1-96f5-72d03d242a59.png width="600" height="400">
 <img src=https://user-images.githubusercontent.com/30370933/189251293-98915427-c02f-46c1-af1e-b1779bee6ba4.png width="500" height="400">
 <img src=https://user-images.githubusercontent.com/30370933/189251306-0269c51a-371b-451c-8a49-5acd9c1d083e.png
  width="600" height="400">
-<img src=https://user-images.githubusercontent.com/30370933/189251294-2f9efb7b-c530-48d1-96f5-72d03d242a59.png width="600" height="400">
+
 
