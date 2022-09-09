@@ -6,10 +6,9 @@
 
 현재 CSS 작업 진행중입니다.
 
-*실제 네트워크 환경에서 응답시간 테스트등을 위해 임시로 열어둔 서버입니다
-CSS 작업이 완료되면 도메인을 등록후 재배포할려고 합니다
+*계속 개발단계로 서버가 수시로 재부팅될 수 있습니다
 
-
+http://chasergam.xyz/
 
 ----------------------------------
 # 팀구성
@@ -39,7 +38,8 @@ chaser/second-sprint : chaser 게임 레이아웃 및 CSS 개선 단계
 
 !현재 레이아웃 수정 작업진행중으로 플레이화면과 달라질 수 있습니다.
 
-<img src=https://user-images.githubusercontent.com/30370933/188370360-aa41a75b-0041-4e2a-9f4e-ea906ab9c0fe.PNG width="500" height="400">
-<img src=https://user-images.githubusercontent.com/30370933/188370338-b574846d-b44c-46ed-b9e5-240abe9ddb22.png width="600" height="400">
-<img src=https://user-images.githubusercontent.com/30370933/188370350-51324472-50d7-43ea-b4db-8ad3a6e0d200.png width="600" height="400">
+<img src=https://user-images.githubusercontent.com/30370933/189251293-98915427-c02f-46c1-af1e-b1779bee6ba4.png width="500" height="400">
+<img src=https://user-images.githubusercontent.com/30370933/189251306-0269c51a-371b-451c-8a49-5acd9c1d083e.png
+ width="600" height="400">
+<img src=https://user-images.githubusercontent.com/30370933/189251294-2f9efb7b-c530-48d1-96f5-72d03d242a59.png width="600" height="400">
 
