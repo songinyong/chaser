@@ -1,3 +1,7 @@
+/*
+ * 연결 종료시 저장되는 로그 파일
+ * */
+
 package com.service.domain.jpa.log;
 
 import java.time.LocalDateTime;
