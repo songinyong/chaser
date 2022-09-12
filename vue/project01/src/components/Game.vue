@@ -1,10 +1,13 @@
+
 <template>
+
 <div class="container">
     <div class="game">
         <div class="Info_zone">
             <div class="user_location">
+                  <h3 align="center">진행유저</h3>
                   <div class="userInfo_zone">
-                    <table border="1" width ="350" height="200" align="center" style="table-layout:fixed">
+                    <table border="1" width ="400" height="200" align="center" style="table-layout:fixed">
                         
                         <tr bgcolor="#EEE6C4" >
                             <td id="user1" class="user" style="word-break:break-all"></td>
@@ -28,6 +31,7 @@
                 </div>
             </div>
             <div class="time_location">
+                <h4 id=numOfUser></h4>
                 <div class="timer_zone">
                     <div id="timer"></div>
                     <label>라운드:</label><div id="round">1</div>
@@ -38,40 +42,40 @@
         <div class="main_zone">
             <div class="board_location">
                 <input type="hidden" id="checkedBoard"/>
-                <h3 align="left">보드</h3>
-                <table border="1" width ="400" height="300" >
+                <h3 align="center">보드</h3>
+                <table border="1" width ="400" height="300" background="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/paper.jpg" style='font-family:"Cookie", cursive; font-size:120%' >
                     
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Chase off</td>
                         <td style="width:15%;" id="Chase off" class="board"></td>
                         <td style="width:35%;">Aces</td>
                         <td style="width:15%;" id="Aces" class="board"></td>            
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Straight</td>
                         <td style="width:15%;" id="Straight" class="board"></td>
                         <td style="width:35%;">Two Beans </td>
                         <td style="width:15%;" id="Two Beans" class="board"></td>        
                     </tr>     
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Even Straight</td>
                         <td style="width:15%;" id="Even Straight" class="board"></td>
                         <td style="width:35%;">Three Beans</td>
                         <td style="width:15%;" id="Three Beans" class="board"></td>          
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Four Dice</td>
                         <td style="width:15%;" id="Four Dice" class="board"></td>
                         <td style="width:35%;">Four Beans</td>
                         <td style="width:15%;" id="Four Beans" class="board"></td>          
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;" >Full House</td>
                         <td style="width:15%;" id="Full House" class="board"></td>
                         <td style="width:35%;">Five Beans</td>
                         <td style="width:15%;" id="Five Beans" class="board"></td>        
                     </tr>
-                    <tr bgcolor="D9E5FF">
+                    <tr bgcolor="transparent">
                         <td style="width:35%;">Choice</td>
                         <td style="width:15%;" id="Choice" class="board"></td>
                         <td style="width:35%;">Six Beans</td>
@@ -89,28 +93,28 @@
             </div>
             <div class="chat_location">
                 <h3>채팅창</h3>
-                <textarea id="chatMsg" name="chatMsg" rows="20"></textarea>
+                <textarea id="chatMsg" name="chatMsg" rows="20" style="background-image:url('https://dx-sprint.s3.ap-northeast-2.amazonaws.com/letter.png')"></textarea>
                 <input type="text" id="chatInput"  maxlength='50'/>
                 <button @click="sendChat()">채팅보내기</button>
             </div>
             <div class="dice_location">
                 <h3>주사위</h3>
-                <table border="1" width ="70" height="300" align="center">
+                <table border="1" width ="70" height="300" align="center" id="dice_list">
                     
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="one" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="one" class="dice"><img id="one dice" src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="two" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="two" class="dice"><img id="two dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="three" class="dice">1</td>
+                    <tr bgcolor="transparent"  >
+                        <td id="three" class="dice"><img id="three dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="four" class="dice">1</td>
+                    <tr bgcolor="transparent" >
+                        <td id="four" class="dice"><img  id="four dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
-                    <tr bgcolor="#EEE6C4" >
-                        <td id="five" class="dice">1</td>
+                    <tr bgcolor="transparent" >
+                        <td id="five" class="dice"><img id="five dice" src="@/assets/diceone.png" style="width:60px; height:60px;"></td>
                     </tr>
                 </table>
 
@@ -138,13 +142,15 @@ const methods = {
   chgBoardColor: (id) => {
         document.querySelectorAll('.board').forEach((board) => {
             if(board.id != id)
-                document.getElementById(board.id).style.backgroundColor = "#D9E5FF";
+                //document.getElementById(board.id).style.backgroundColor = "#D9E5FF";
+                document.getElementById(board.id).style.backgroundColor = "#11ffee00";
+                
         });
     },
   chgDiceColor : () => {
         document.querySelectorAll('.dice').forEach((dice) => {
             
-            document.getElementById(dice.id).style.backgroundColor = "#EEE6C4";
+            document.getElementById(dice.id).style.backgroundColor = "transparent";
         });
   },
 
@@ -152,23 +158,28 @@ const methods = {
 }
 export default {
   name: 'gameComponent',
+  created() {
+      document.title = 'chaser';
+    },
 
   mounted() {
     
     document.querySelectorAll('.dice').forEach((dice) => {
-    
+
         dice.addEventListener('click', function(event) {
         
+            
 
-        if(clicked.has(event.target.id)) {
-            clicked.delete(event.target.id);
-            document.getElementById(event.target.id).style.backgroundColor ="#EEE6C4"
+
+        if(clicked.has(dice.id)) {
+            clicked.delete(dice.id);
+            document.getElementById(dice.id).style.backgroundColor ="transparent"
             
         }
             
         else {
-            clicked.add(event.target.id);
-            document.getElementById(event.target.id).style.backgroundColor ="#FFFFFF"
+            clicked.add(dice.id);
+            document.getElementById(dice.id).style.backgroundColor = "#EEE6C4"
             
         }
 
@@ -269,7 +280,16 @@ export default {
 
 .dice_location { grid-area: dice_location; }
 
+@import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
 
+#main_board {
+    font-family: 'Ms Madi', cursive;
+}
+
+#dice_list {
+    border-collapse:collapse;
+    border:none;
+}
 
 
 </style>

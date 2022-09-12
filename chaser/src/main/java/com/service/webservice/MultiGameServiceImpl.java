@@ -43,7 +43,9 @@ public class MultiGameServiceImpl implements GameService{
 	private final int TURNTIME = 30;
 	
 	
-	//!dto 추가 작업 해야함
+	/**
+	 * 게이밍 객체 생성후 리턴
+	 */
 	public Gaming gameStart(String roomId, JSONObject gameSet) {
 	
 		Gaming redisGame = MultiGaming.builder()
@@ -54,7 +56,12 @@ public class MultiGameServiceImpl implements GameService{
 			
 
 	}
-		
+	
+	/**
+	 * 클라이언트 호출
+	 * 주사위를 굴릴 수 있는지 확인후
+	 * 굴린횟수에따라 전체 주사위를 굴릴지, 특정 주사위만 굴리는지 정해짐
+	 */
 	public boolean diceCtrl(Gaming redisGame, String indexs, String userId) {
 
 
@@ -254,6 +261,9 @@ public class MultiGameServiceImpl implements GameService{
 			
 	}
 	
+	/**
+	 *  현재 비워있는 칸중 점수를 넣을 수 있는 칸들의 점수를 리턴해줌
+	 */
 	public HashMap<String, Integer> calcScoreCheck(Gaming redisGame, HashMap<String, Integer> board) {
 		
 		HashMap<String, Integer> result = calcScoreCheck(redisGame);

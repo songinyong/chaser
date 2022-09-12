@@ -7,6 +7,8 @@ import org.springframework.web.socket.WebSocketSession;
 import com.service.domain.jpa.UserRepository;
 import com.service.domain.jpa.log.ConnLog;
 import com.service.domain.jpa.log.ConnLogRepository;
+import com.service.domain.jpa.log.DisConnLog;
+import com.service.domain.jpa.log.DisConnLogRepository;
 
 
 
@@ -18,7 +20,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	public ConnLogRepository connRepo;
-	
+
+	@Autowired
+	public DisConnLogRepository disConnRepo;
 
 	
 	public void addConnLog(WebSocketSession session) {
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	public void addDisLog(WebSocketSession session) {
 		
 		String ip = (String) session.getAttributes().get("ip") ;
-		connRepo.save(ConnLog.builder()
+		disConnRepo.save(DisConnLog.builder()
 				.session(session.toString())
 				.ipAddress(ip)
 				.build());

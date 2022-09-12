@@ -5,10 +5,11 @@
 
 import { getCurrentInstance} from "@vue/runtime-core";
 import router from '@/router/index.js';
+//import logger from 'js/logger.js'
 //const app = getCurrentInstance();
 //const $webSocket = app.appContext.config.globalProperties.$webSocket;
 const $webSocket = new WebSocket("ws://34.64.92.123:8088/websocket")
-
+//const $webSocket = new WebSocket("ws://localhost:8088/websocket")
 var timer ;
 //게임 시간 주기
 var time=30;
@@ -56,6 +57,14 @@ const methods = {
       userId = obj2.userId;
       document.getElementById('userName').innerHTML = userNm;
     }
+    /*
+    else if(obj2.status =='numofUser') {
+
+      console.log(document.getElementById('numOfUsser'))
+      userNm = obj2.numOfUser;
+      userId = obj2.userId;
+      document.getElementById('numOfUser').innerHTML = "접속자수: " + obj2.numOfUser +"명";
+    }*/
     else if(obj2.status == 0) {
 
       document.querySelectorAll('.user').forEach((user) => {
@@ -112,13 +121,15 @@ const methods = {
     }
     // 다이스 점수 계산
     else if( obj2.status == 'dice') {
+      
       methods.diceResult(obj2.diceList);
       if(userNm == obj2.currentUser || viewNm == obj2.currentUser) {
         methods.showBoard(obj2.board.board);  
         methods.preScore(obj2.chkBoard);
         
         if(3-obj2.diceRollCount > 0)
-            methods.setStat('기회가'+ (3-obj2.diceRollCount) +'번 남았습니다');
+            methods.setStat('주사위를 선택하여 굴릴 기회가'+ (3-obj2.diceRollCount) +'번 남았습니다');
+        
         else
             methods.setStat('더이상 굴릴 수 없습니다');
         }
@@ -412,11 +423,34 @@ const methods = {
     //4. 굴려진 다이스 표시
     diceResult : (diceList) => {
       
-      document.getElementById('one').innerHTML = diceList["1"];
-      document.getElementById('two').innerHTML = diceList["2"];
-      document.getElementById('three').innerHTML = diceList["3"];
-      document.getElementById('four').innerHTML = diceList["4"];
-      document.getElementById('five').innerHTML = diceList["5"];
+      document.getElementById('one').innerHTML = methods.diceImage(diceList["1"]);
+      document.getElementById('two').innerHTML = methods.diceImage(diceList["2"]);
+      document.getElementById('three').innerHTML = methods.diceImage(diceList["3"]);
+      document.getElementById('four').innerHTML = methods.diceImage(diceList["4"]);
+      document.getElementById('five').innerHTML = methods.diceImage(diceList["5"]);
+    },
+
+    //다이스 숫자에 따라 해당 주사위 이미지를 보여줌
+    diceImage : (diceInput) => {
+
+      if(diceInput == 1) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/diceone.png" style="width:60px; height:60px;"></img>' ;
+      }
+      else if(diceInput == 2) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/dicetwo.png" style="width:60px; height:60px;"></img>' ;
+      }
+      else if(diceInput == 3) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/dicethree.png" style="width:60px; height:60px;"></img>' ;
+      }
+      else if(diceInput == 4) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/dicefour.png" style="width:60px; height:60px;"></img>' ;
+      }
+      else if(diceInput == 5) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/dicefive.png" style="width:60px; height:60px;"></img>' ;
+      }
+      else if(diceInput == 6) {
+        return '<img src="https://dx-sprint.s3.ap-northeast-2.amazonaws.com/dicesix.png" style="width:60px; height:60px;"></img>' ;
+      }
     },
 
     //4. 예상 점수를 보드판에 보여줌

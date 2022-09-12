@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router/index.js';
 import common from './assets/common.js'
 import security from './assets/security.js'
+import { createHead } from "@vueuse/head"
+
+const head = createHead()
 const app = createApp(App)
 
 //const webSocket = new WebSocket("ws://localhost:8088/websocket");
@@ -10,6 +13,8 @@ const app = createApp(App)
 
 //const clicked = new Set();
 //app.config.globalProperties.$clicked = clicked;
-app.use(router).use(common).use(security).mount('#app')
+
+
+app.use(router).use(common).use(security).use(head).mount('#app')
 
 

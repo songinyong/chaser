@@ -1,3 +1,9 @@
+/**
+ * rest api 호출 컨트롤러
+ * 
+ * 제작자:송인용
+ **/
+
 package com.service.web;
 
 import org.json.simple.JSONObject;
@@ -23,7 +29,9 @@ public class GameRestController {
 	private final RoomService roomService;
 	
 	
-		
+	/**
+	 * Redis에 저장된 방 정보 목록을 조회하는 api 
+	 * */
 	@GetMapping("/roomList")
 	public ResponseEntity<JSONObject> getRoomList() {
 		

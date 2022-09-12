@@ -10,19 +10,29 @@ const router = createRouter({
     routes: [
       {
         path: '/',
-        component: LobbyComponent
+        component: LobbyComponent,
+        meta: {
+          title: "chaser",
+        },
       },
       {
         path: '/room',
-        component: roomComponent
+        component: roomComponent,
+        meta: {
+          title: "chaser",
+        },
 
       },
       {
         path: '/game',
-        component: gameComponent
+        component: gameComponent,
+        meta: {
+          title: "chaser",
+        },
 
       }
    ]
   });
+
 
   export default router;
