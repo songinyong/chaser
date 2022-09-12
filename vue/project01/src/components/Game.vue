@@ -7,7 +7,7 @@
             <div class="user_location">
                   <h3 align="center">진행유저</h3>
                   <div class="userInfo_zone">
-                    <table border="1" width ="400" height="200" align="center" style="table-layout:fixed">
+                    <table border="1" width ="450" height="200" align="center" style="table-layout:fixed">
                         
                         <tr bgcolor="#EEE6C4" >
                             <td id="user1" class="user" style="word-break:break-all"></td>
@@ -88,7 +88,7 @@
             </div>
             <div class="status_location">
                 <h3>상태메시지</h3>
-                <textarea id="statMsg" name="statMsg" rows="5"></textarea>
+                <textarea id="statMsg" name="statMsg" rows="5" ></textarea>
 
             </div>
             <div class="chat_location">
@@ -233,6 +233,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 .container {  display: grid;
   grid-template-columns: 0.6fr 1.4fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;

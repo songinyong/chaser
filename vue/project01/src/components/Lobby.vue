@@ -1,8 +1,40 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@songinyong 
+songinyong
+/
+chaser
+Public
+Code
+Issues
+3
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+chaser/vue/project01/src/components/Lobby.vue
+@songinyong
+songinyong [UPDATE] 레이아웃 수정 작업
+Latest commit 56236d4 24 minutes ago
+ History
+ 1 contributor
+253 lines (202 sloc)  6.3 KB
+
 <template>
 
   <div class="lobby">
     <div class="container">
-      <div class="picture_zone"><img alt="Vue logo" src="@/assets/dice.jpg" width="200" height="200" style="width:250px; height:250px"/></div>
+      <div class="picture_zone"><img alt="Vue logo" src="@/assets/dice.jpg" width="200" height="200" style="width:250px; height:250px"/>
+        <h2>Chaser Game</h2>
+      </div>
       <div class="room_zone">
         <div class="roomList_location">
           <h4 id=numOfUser></h4>
@@ -19,7 +51,7 @@
           <button onclick="test()">빠른입장</button>
           <br/>-->
           <label>방 아이디</label>
-          <input type="text" id="roomId" name="name" maxlength='5'/>
+          <input type="text" id="roomId" name="name" maxlength='5' placeholder="Id는 #뒤의 문자입니다"/>
           <button @click="roomEnter()" class="custom-btn main_btn"><span>입장</span></button>
           <br/>
         
@@ -29,9 +61,11 @@
       <div class="userInfo_zone">
 
         <div class="userInfo_location">
+          
           <h3 id="userName"></h3>
-          <input type="text" id="userNm" name="name" maxlength='10'/>
-          <button @click="nameChange()" class="custom-btn main_btn"><span>이름설정</span></button>
+          <input type="text" id="userNm" name="name" maxlength='10' placeholder="이름을 설정해주세요"/>
+          <br/>
+          <button @click="nameChange()" class="custom-btn main_btn"><span>변경</span></button>
         </div>
         
         <div class="update_list">
@@ -154,6 +188,18 @@ export default {
 </script>
 
 <style scoped>
+
+#userNm {
+  width: 300px; 
+  height: 50px;
+  border-top : 3px solid black;
+  border-left : 3px solid black;
+  border-right : 3px solid black;
+  border-bottom : 3px solid black;
+
+}
+
+
 .container {  
   display: grid;
   grid-template-columns: 1.1fr 1fr 0.9fr;
@@ -231,7 +277,5 @@ export default {
    4px 4px 5px 0px #0001;
 }
 
-
-
-
 </style>
+

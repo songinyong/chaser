@@ -15,7 +15,7 @@
 
       <div class="user_zone">    
             <h3 align="center">접속유저</h3>
-            <table border="1" width ="300" height="200" align="center" style="table-layout:fixed">
+            <table border="1" width ="500" height="200" align="center" style="table-layout:fixed">
                 <tr bgcolor="#EEE6C4" >
                     <td id="user1" class="user" style="word-break:break-all"></td>
                     <td id="user2" class="user" style="word-break:break-all"></td>
@@ -92,6 +92,14 @@ export default {
 </script>
 
 <style scoped>
+#titleInput {
+  width: 200px; 
+  height: 30px;
+  border-top : 3px solid black;
+  border-left : 3px solid black;
+  border-right : 3px solid black;
+  border-bottom : 3px solid black;
+}
 
 .container {  display: grid;
   grid-template-columns: 1fr 1fr 1fr;
