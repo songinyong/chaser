@@ -7,9 +7,9 @@
       <div class="info_zone"></div>
       <div class="main_zone">
         <div class="room_zone">
-
-          <label id="room_title">방이름</label>
-          <input type="text" id="titleInput"  maxlength='20'/>
+          
+          <h3 id="room_title"></h3>
+          <input type="text" id="titleInput"  maxlength='20' placeholder="방제목은 방장만 변경 가능합니다"/>
           <button @click="titleChange()">변경</button>
         </div>
 
@@ -64,12 +64,12 @@ export default {
   created() {
       document.title = 'chaser';
     },
-    setup() {
-  useHead({
-    meta: [
-      { name: 'viewport', content: 'width=device-width,initial-scale=1.0,user-scalable=no' },
-      { charset: 'utf-8' },
-
+ 
+  setup() {
+    useHead({
+      meta: [
+        { name: 'viewport', content: 'width=device-width,initial-scale=1.0,user-scalable=no' },
+        { charset: 'utf-8' },
     ]
 
   })
